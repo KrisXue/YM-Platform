@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>商户信息</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta content="telephone=no" name="format-detection">
+		<link rel="stylesheet" type="text/css" href="css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css">
+	</head>
+
+	<body>
+	<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+		<div class="mui-scroll">
+			<div class="mui-content">
+				<div id="openid" style="display:none;">${openid}</div>
+			<div id="merchantIdDIV" style="display:none;">${merchantId}</div>
+				<ul id="ci" class="mui-table-view">
+
+
+					<li class="mui-table-view-cell mui-media"><img
+						class="mui-media-object mui-pull-left"
+						src="images/shanghuxinxi-icon-bianhao.png">
+						<div class="mui-media-body">
+							<p class='mui-ellipsis  mui-pull-left'>商户编号</p>
+							<p class="mui-pull-right" id="merchantId"></p>
+						</div></li>
+					<li class="mui-table-view-cell mui-media"><img
+						class="mui-media-object mui-pull-left"
+						src="images/shanghuxinxi-icon-quancheng.png">
+						<div class="mui-media-body">
+							<p class='mui-ellipsis  mui-pull-left'>商户名称</p>
+							<p class="mui-pull-right" id="mercNm"></p>
+						</div></li>
+					<li class="mui-table-view-cell mui-media"><img
+						class="mui-media-object mui-pull-left"
+						src="images/shanghuxinxi-icon-jiancheng.png">
+						<div class="mui-media-body">
+							<p class='mui-ellipsis  mui-pull-left'>结算账号</p>
+							<p class="mui-pull-right" id="stlAct"></p>
+						</div></li>
+					<li class="mui-table-view-cell mui-media"><img
+						class="mui-media-object mui-pull-left"
+						src="images/shanghuxinxi-icon-nicheng.png">
+						<div class="mui-media-body">
+							<p class='mui-ellipsis  mui-pull-left'>结账户名</p>
+							<p class="mui-pull-right" id="stlNm"></p>
+						</div></li>
+					<li class="mui-table-view-cell mui-media"><img
+						class="mui-media-object mui-pull-left"
+						src="images/shanghuxinxi-icon-denglu .png">
+						<div class="mui-media-body">
+							<p class='mui-ellipsis mui-pull-left'>手机号</p>
+							<p class="mui-pull-right" id="phone"></p>
+						</div></li>
+					<li class="mui-table-view-cell mui-media"><img
+						class="mui-media-object mui-pull-left"
+						src="images/shanghuxinxi_icon_email.png">
+						<div class="mui-media-body">
+							<p class='mui-ellipsis  mui-pull-left'>email</p>
+							<p class="mui-pull-right" id="email"></p>
+						</div></li>
+					<li class="mui-table-view-cell mui-media"><img
+						class="mui-media-object mui-pull-left"
+						src="images/shanghuxinxi_icon_dizhi.png">
+						<div class="mui-media-body">
+							<p class='mui-ellipsis  mui-pull-left'>地址</p>
+							<p class="mui-pull-right" id="merAddr"></p>
+						</div></li>
+					
+
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/mui.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/commercialInfo.js" type="text/javascript"
+		charset="utf-8"></script>
+</body>
+
+
+</html>

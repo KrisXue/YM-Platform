@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>交易查询</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta content="telephone=no" name="format-detection">
+		<link rel="stylesheet" type="text/css" href="css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="css/mui.picker.min.css" />
+		<link rel="stylesheet" href="css/main.css">
+	</head>
+
+	<body>
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper pullrefresh">
+			<div class="mui-scroll">
+				<div class="mui-content">
+
+					<!--<div class="mui-content-padded">
+						<div id="selectDateDiv" data-options='{"type":"date","beginYear":2001,"endYear":2018}' class="mui-input-row">
+							<input id="tradeDate" type="text" placeholder="请选择交易日期">
+						</div>
+
+					</div>-->
+					<!--<div class="title" align="center" id="title">
+
+					</div>-->
+					<p align="center" style="color: #a9a9a9;" id="message"></p>
+					<ul id="qt" class="mui-table-view">
+
+					</ul>
+
+				</div>
+			</div>
+		</div>
+		<header class="mui-bar mui-bar-nav" id="header">
+			<div class="mui-content-padded">
+				<div id="selectDateDiv" data-options='{"type":"date","beginYear":2001,"endYear":2018}' class="mui-input-row">
+					<input id="tradeDate" type="text" placeholder="请选择交易日期">
+				</div>
+
+			</div>
+		</header>
+		<script type="text/template" id="tpl">
+			<%_.each(obj,function(e,i){%>
+			<li class="mui-table-view-cell mui-media">
+				<% if(e.paychannel ==  'WXPAY'){ %>
+				<img class="mui-media-object mui-pull-left" src="images/jiaoyichaxun-pic-weixin.png">
+				<% } else if(e.paychannel ==  'ALIPAY'){ %>
+				<img class="mui-media-object mui-pull-left" src="images/jiaoyichaxun-pic-zhifubao.png">
+				<% } %>
+				<div class="mui-media-body">
+					<p class='mui-ellipsis mui-pull-left one'>
+						<%=(e.orderno).replace(/\s/g, '').replace(/(.{4})/g, "$1 ")%>
+					</p>
+					<p class="mui-pull-right one">
+						<% if(e.txnsts ==  'S'){ %>
+							<% if(e.txnamt ==  e.refamt){ %>
+							-
+						<% } %>
+						<% if(e.txnamt !=  e.refamt){ %>
+							+
+						<% } %>
+							
+						<% } %>
+						<% if(e.txnsts ==  'F'){ %>
+							+
+						<% } %>
+						<% if(e.txnsts ==  'A'){ %>
+							+
+						<% } %>
+						
+						<%=(e.txnamt/1).toFixed(2)%>
+					</p>
+					<br />
+					<p class='mui-ellipsis mui-pull-left two' style="font-size: 12px;">
+						<%=e.acdt%>
+					</p>
+					<% if(e.txnsts ==  'S'){ %>
+					<p class="mui-pull-right two" style="font-size: 12px;">
+						<% if(e.txnamt ==  e.refamt){ %>
+							<p class="mui-pull-right two" style="font-size: 12px;">
+								已退货
+							</p>
+						<% } %>
+						<% if(e.txnamt !=  e.refamt){ %>
+							<p class="mui-pull-right two" style="font-size: 12px;">
+								成功
+							</p>
+						<% } %>
+					</p>
+					<% } %>
+					
+					<% if(e.txnsts ==  'F'){ %>
+					<p class="mui-pull-right two" style="font-size: 12px;">
+						失败
+					</p>
+					<% } %>
+					<% if(e.txnsts ==  'A'){ %>
+					<p class="mui-pull-right two" style="font-size: 12px;">
+						待付款
+					</p>
+					<% } %>
+					
+				</div>
+			</li>
+			<%})%>
+		</script>
+		<script src="js/mui.js"></script>
+		<script src="js/mui.picker.min.js"></script>
+		<script src="js/queryTransaction.js"></script>
+		<script src="js/zepto.min.js"></script>
+		<script src="js/underscore-min.js"></script>
+		<script>
+			var tplRender = _.template($("#tpl").html());
+			var storage = window.localStorage;
+			storage.setItem("openid", "oZPvswF55kzj0F-BgKGmUVFr8YNU");
+			storage.setItem("merchantId", "888290059490001");
+			var openid = storage.getItem("openid");
+			var merchantId = storage.getItem("merchantId");
+
+			var count = 1;
+			var pagNum = 10;
+			mui.init({
+				swipeBack: false,
+				pullRefresh: {
+					container: '#pullrefresh',
+					up: { //上拉加载
+						contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
+						contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
+						callback: pullupRefresh
+					}
+				}
+			});
+			/**
+			 * 上拉加载具体业务实现
+			 */
+			function pullupRefresh() {
+				setTimeout(function() {
+					count++; //翻下一页
+					console.log(count);
+					var startDate = storage.getItem("startDate");
+					var endDate = storage.getItem("endDate");
+					mui.ajax({
+						type: 'post',
+						contentType: "application/x-www-form-urlencoded; charset=utf-8",
+						url: 'http://106.14.81.178:8180/mcg/cashier?merchantId=888290059490001&openId=oZPvswF55kzj0F-BgKGmUVFr8YNU&requestId=1486381296601&signType=MD5&type=wxPubQryTxnLst&version=1.0.0&startDate=20170301&endDate=20170308&pagNo=1&pagNum=10',
+						async: true,
+						timeout: 1000,
+						success: function(data) {
+							//返回值转化为JSON
+							var strs = new Array();
+							strs = data.split("&");
+							var json = "";
+							json += "{";
+							for(i = 0; i < strs.length; i++) {
+								var strO = new Array();
+								strO = strs[i].split("=");
+								for(j = 0; j < strs.length; j++) {
+									var newStr = strO[0] + ":" + "'" + decodeURIComponent(strO[1]) + "'";
+								}
+								json += newStr;
+								if(i < strs.length - 1) {
+									json += ",";
+								}
+							}
+							json += "}";
+							var newJson = eval("(" + json + ")");
+							var data = JSON.parse(newJson.datas);
+							$("#qt").append(tplRender(data));
+							if(storage.getItem("count") == 1) {
+								if(count == storage.getItem("pageCount")) {
+									mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+
+								} else {
+									mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+								}
+
+							} else {
+								if(count == storage.getItem("pageCount")) {
+									mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+
+								} else {
+									mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+								}
+							}
+
+						},
+						error: function(xhr, type, errorThrown) {
+							mui.toast('网络异常,请稍候再试');
+
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+						}
+					});
+
+				}, 2000);
+			}
+
+			mui.ready(function() {
+				queryTradeWeek();
+				var btns = $('#selectDateDiv');
+				btns.each(function(i, btn) {
+					btn.addEventListener('tap', function() {
+						var optionsJson = this.getAttribute('data-options') || '{}';
+						var options = JSON.parse(optionsJson);
+						var id = this.getAttribute('id');
+						/*
+						 * 首次显示时实例化组件
+						 * 示例为了简洁，将 options 放在了按钮的 dom 上
+						 * 也可以直接通过代码声明 optinos 用于实例化 DtPicker
+						 */
+						var picker = new mui.DtPicker(options);
+						picker.show(function(rs) {
+							/*
+							 * rs.value 拼合后的 value
+							 * rs.text 拼合后的 text
+							 * rs.y 年，可以通过 rs.y.vaue 和 rs.y.text 获取值和文本
+							 * rs.m 月，用法同年
+							 * rs.d 日，用法同年
+							 * rs.h 时，用法同年
+							 * rs.i 分（minutes 的第二个字母），用法同年
+							 */
+							document.getElementById("tradeDate").value = rs.text;
+							if(document.getElementById("tradeDate").value.length != 0) {
+								var dateParms = document.getElementById("tradeDate").value;
+								if((typeof dateParms == "string") && dateParms.constructor == String) {
+
+									//将字符串日期转换为日期格式
+									var datetime = new Date(Date.parse(dateParms.replace(/-/g, "/")));
+
+								}
+
+								//获取年月日时分秒
+								var year = datetime.getFullYear();
+								var month = datetime.getMonth() + 1;
+								var date = datetime.getDate();
+
+								//月，日，时，分，秒 小于10时，补0
+								if(month < 10) {
+									month = "0" + month;
+								}
+								if(date < 10) {
+									date = "0" + date;
+								}
+
+								//拼接日期格式【例如：yyyymmdd】
+								var time = year + month + date;
+								console.log(time);
+								var startDate = time;
+								var endDate = time;
+								storage.setItem("startDate", startDate);
+								storage.setItem("endDate", endDate);
+								count = 1;
+								mui.ajax({
+									type: 'post',
+									contentType: "application/x-www-form-urlencoded; charset=utf-8",
+									url: 'http://106.14.81.178:8180/mcg/cashier?merchantId=111130100000001&openId=oZPvswF55kzj0F-BgKGmUVFr8YNU&requestId=1486381296601&signType=MD5&type=wxPubQryTxnLst&version=1.0.0&startDate=20170301&endDate=20170308&pagNo=1&pagNum=10',
+									async: true,
+									timeout: 1000,
+									success: function(data) {
+										//返回值转化为JSON
+										var strs = new Array();
+										strs = data.split("&");
+										var json = "";
+										json += "{";
+										for(i = 0; i < strs.length; i++) {
+											var strO = new Array();
+											strO = strs[i].split("=");
+											for(j = 0; j < strs.length; j++) {
+												var newStr = strO[0] + ":" + "'" + decodeURIComponent(strO[1]) + "'";
+											}
+											json += newStr;
+											if(i < strs.length - 1) {
+												json += ",";
+											}
+										}
+										json += "}";
+										var newJson = eval("(" + json + ")");
+										var data = JSON.parse(newJson.datas);
+										console.log("日期查询Count" + count);
+										var sumPage = parseInt(newJson.totCnt / 10) + 1;
+										console.log("日期查询总条数" + sumPage);
+										mui('#pullrefresh').pullRefresh().refresh(true);
+										if(count == 1) {
+											storage.setItem("pageCount", parseInt(newJson.totCnt / 10) + 1);
+										}
+										if(newJson.datas == 0) {
+											document.getElementById("message").innerHTML = dateParms + " 暂无交易数据";
+											mui('#pullrefresh').pullRefresh().disablePullupToRefresh();
+											$("#qt").html("");
+										} else {
+											document.getElementById("message").innerHTML = dateParms + " 交易数据";
+											mui('#pullrefresh').pullRefresh().enablePullupToRefresh();
+											$("#qt").html(tplRender(data));
+										}
+
+									},
+									error: function(xhr, type, errorThrown) {
+										mui.toast('网络异常,请稍候再试');
+										mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+									}
+								})
+							}
+							picker.dispose();
+						});
+					}, false);
+				});
+
+			});
+
+			function get7DaysBefore(date) {
+				var date = date || new Date(),
+					timestamp, newDate;
+				if(!(date instanceof Date)) {
+					date = new Date(date.replace(/-/g, '/'));
+				}
+				timestamp = date.getTime();
+				newDate = new Date(timestamp - 7 * 24 * 3600 * 1000);
+				return [
+					[newDate.getFullYear(), newDate.getMonth() + 1, newDate.getDate()].join('/')
+				].join(' ');
+			}
+
+			function queryTradeWeek() {
+				var datetime = new Date();
+				//获取年月日时分秒
+				var year = datetime.getFullYear();
+				var month = datetime.getMonth() + 1;
+				var date = datetime.getDate();
+
+				//月，日，时，分，秒 小于10时，补0
+				if(month < 10) {
+					month = "0" + month;
+				}
+				if(date < 10) {
+					date = "0" + date;
+				}
+
+				//拼接日期格式【例如：yyyymmdd】
+				var endTime = year + month + date;
+
+				var beginTime = get7DaysBefore(datetime);
+				if((typeof beginTime == "string") && beginTime.constructor == String) {
+
+					//将字符串日期转换为日期格式
+					var datetime = new Date(Date.parse(beginTime.replace(/-/g, "/")));
+
+				}
+
+				//获取年月日时分秒
+				var year = datetime.getFullYear();
+				var month = datetime.getMonth() + 1;
+				var date = datetime.getDate();
+
+				//月，日，时，分，秒 小于10时，补0
+				if(month < 10) {
+					month = "0" + month;
+				}
+				if(date < 10) {
+					date = "0" + date;
+				}
+				var beginTime = year + month + date;
+				var startDate = beginTime;
+				var endDate = endTime;
+				storage.setItem("startDate", startDate);
+				storage.setItem("endDate", endDate);
+				mui.ajax({
+					type: 'post',
+					contentType: "application/x-www-form-urlencoded; charset=utf-8",
+					url: 'http://106.14.81.178:8180/mcg/cashier?merchantId=888290059490001&openId=oZPvswF55kzj0F-BgKGmUVFr8YNU&requestId=1486381296601&signType=MD5&type=wxPubQryTxnLst&version=1.0.0&startDate=20170304&endDate=20170304&pagNo=1&pagNum=10',
+					async: true,
+					timeout: 1000,
+					success: function(data) {
+						//返回值转化为JSON
+						var strs = new Array();
+						strs = data.split("&");
+						var json = "";
+						json += "{";
+						for(i = 0; i < strs.length; i++) {
+							var strO = new Array();
+							strO = strs[i].split("=");
+							for(j = 0; j < strs.length; j++) {
+								var newStr = strO[0] + ":" + "'" + decodeURIComponent(strO[1]) + "'";
+							}
+							json += newStr;
+							if(i < strs.length - 1) {
+								json += ",";
+							}
+						}
+						json += "}";
+						var newJson = eval("(" + json + ")");
+						var data = JSON.parse(newJson.datas);
+						console.log(data);
+						console.log("一周查询Count" + count);
+						if(count == 1) {
+							storage.setItem("pageCount", parseInt(newJson.totCnt / 10) + 1);
+						}
+						if(newJson.datas == 0) {
+							document.getElementById("message").innerHTML = "最近一周暂无交易数据";
+							$("#qt").html("");
+							mui('#pullrefresh').pullRefresh().disablePullupToRefresh();
+							$("#qt").html("");
+						} else {
+							document.getElementById("message").innerHTML = "最近一周交易数据";
+							mui('#pullrefresh').pullRefresh().enablePullupToRefresh();
+							$("#qt").html(tplRender(data));
+						}
+
+					},
+					error: function(xhr, type, errorThrown) {
+						mui.toast('网络异常,请稍候再试');
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+					}
+				});
+
+			}
+		</script>
+
+	</body>
+
+</html>

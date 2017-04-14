@@ -1,0 +1,334 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta content="telephone=no" name="format-detection">
+		<title>星POS商户平台</title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/main.css">
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="mui-content-padded">
+				<div class="logoDiv">
+					<img id="qrcode" src="images/logo.png" width="60%" />
+				</div>
+				<div class="mui-content-padded" id="mui-content-padded-form">
+
+					<div id="openid" style="display:none;">${openid}</div>
+					<form id='bind-form' class="mui-input-group">
+						<div class="mui-input-row">
+							<label><span class="mui-icon mui-icon-phone"></span></label>
+							<input id='mobileNum' type="text" class="mui-input-clear mui-input " placeholder="请输入手机号">
+
+						</div>
+						<div class="mui-input-row">
+							<label><span class="mui-icon mui-icon-locked"></span></label>
+
+							<input id='verifyCode' type="text" class=" mui-input " placeholder="请输入手机验证码">
+
+						</div>
+					</form>
+				</div>
+				<div id="btnDiv">
+						   <span><input type="button"id="btn"value="获取验证码"/> </span>
+				</div>
+				<div class="mui-content-padded" id="mui-content-padded-comfirmBtn">
+					<button type="button" id="bindBtn" class="mui-btn mui-btn-block mui-btn-primary">确定</button>
+				</div>
+			</div>
+		</div>
+		<script src="js/mui.js"></script>
+		<script src="js/zepto.min.js"></script>
+		<!--<script src="js/commercialBound.js"></script>-->
+		<script type="text/javascript">
+			function GetRequest() {
+				var url = location.search;
+				var theRequest = new Object();
+				if(url.indexOf("?") != -1) {
+					var str = url.substr(1);
+					strs = str.split("&");
+					for(var i = 0; i < strs.length; i++) {
+						theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+					}
+				}
+				return theRequest;
+			}
+			var Request = GetRequest();
+			var key = Request["code"];
+			document.getElementById("openid").value = key;
+			
+						var menu = null,
+				main = null;
+			var showMenu = false;
+			mui.init({
+				swipeBack: false,
+				statusBarBackground: '#f7f7f7',
+				gestureConfig: {
+					doubletap: true
+				},
+				subpages: [{
+					id: '',
+					url: '',
+					styles: {
+						top: '',
+						bottom: 0,
+						bounce: ''
+					}
+				}]
+			});
+			mui.plusReady(function() {
+				//仅支持竖屏显示
+				plus.screen.lockOrientation("portrait-primary");
+				main = plus.webview.currentWebview();
+				main.addEventListener('maskClick', closeMenu);
+				//处理侧滑导航，为了避免和子页面初始化等竞争资源，延迟加载侧滑页面；
+				setTimeout(function() {
+					menu = mui.preload({
+						id: 'index-menu',
+						url: 'index-menu.html',
+						styles: {
+							left: 0,
+							width: '70%',
+							zindex: -1,
+							popGesture: "none"
+						},
+						show: {
+							aniShow: 'none'
+						}
+					});
+				}, 200);
+			});
+			var isInTransition = false;
+			/**
+			 * 显示侧滑菜单
+			 */
+			function openMenu() {
+				if(isInTransition) {
+					return;
+				}
+				if(!showMenu) {
+					//侧滑菜单处于隐藏状态，则立即显示出来；
+					isInTransition = true;
+					menu.setStyle({
+						mask: 'rgba(0,0,0,0)'
+					}); //menu设置透明遮罩防止点击
+					menu.show('none', 0, function() {
+						//主窗体开始侧滑并显示遮罩
+						main.setStyle({
+							mask: 'rgba(0,0,0,0.4)',
+							left: '70%',
+							transition: {
+								duration: 150
+							}
+						});
+						mui.later(function() {
+							isInTransition = false;
+							menu.setStyle({
+								mask: "none"
+							}); //移除menu的mask
+						}, 160);
+						showMenu = true;
+					});
+				}
+			};
+			/**
+			 * 关闭菜单
+			 */
+			function closeMenu() {
+				if(isInTransition) {
+					return;
+				}
+				if(showMenu) {
+					//关闭遮罩；
+					//主窗体开始侧滑；
+					isInTransition = true;
+					main.setStyle({
+						mask: 'none',
+						left: '0',
+						transition: {
+							duration: 200
+						}
+					});
+					showMenu = false;
+					//等动画结束后，隐藏菜单webview，节省资源；
+					mui.later(function() {
+						isInTransition = false;
+						menu.hide();
+					}, 300);
+				}
+			};
+			
+			//主界面向右滑动，若菜单未显示，则显示菜单；否则不做任何操作
+			window.addEventListener("swiperight", openMenu);
+			//主界面向左滑动，若菜单已显示，则关闭菜单；否则，不做任何操作；
+			window.addEventListener("swipeleft", closeMenu);
+			//侧滑菜单触发关闭菜单命令
+			window.addEventListener("menu:close", closeMenu);
+			window.addEventListener("menu:open", openMenu);
+			//重写mui.menu方法，Android版本menu按键按下可自动打开、关闭侧滑菜单；
+			mui.menu = function() {
+					if(showMenu) {
+						closeMenu();
+					} else {
+						openMenu();
+					}
+				}
+			//首页返回键处理
+			//1、若侧滑菜单显示，则关闭侧滑菜单
+			//2、否则，通知子窗口(list.html)显示toast提醒
+			mui.back = function() {
+				if(showMenu) {
+					closeMenu();
+				} else {
+					//通知子窗口弹toast提醒
+					var sub = plus.webview.getWebviewById("list");
+					mui.fire(sub, "back");
+				}
+			};
+
+			//验证码倒计时
+			//var code = "123456"
+			var code=""; 
+			for(var i=0;i<6;i++) { 
+				code+=Math.floor(Math.random()*10); 
+			} 
+			document.getElementById('btn').addEventListener('tap', function(e) {
+				var jsonBody = JSON.stringify({
+					"signname": "新大陆",
+					"templatecode": "SMS_39185340",
+					"paramstring": {
+						"code": code,
+						"product": "星POS商户公众号"
+					},
+					"recnum": document.getElementById("mobileNum").value
+				});
+				validatemobile(document.getElementById("mobileNum").value);
+				//校验手机号
+				function validatemobile(par) {
+					if(par.length == 0) {
+						mui.alert("请填写手机号！");
+						return false;
+					}
+					if(par.length != 11) {
+						mui.alert("请输入有效的手机号码！");
+						return false;
+					}
+					var translatematrixREa = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
+					var matrix = translatematrixREa.test(par);
+					//如果手机号码不能通过验证
+
+					if(matrix == true) {
+						mui.ajax("http://api.starpos.com.cn:8080/cloudpos/sms/singleSendSms", {
+							data: jsonBody,
+							contentType: "application/json;charset=utf-8",
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							success: function(data) {
+								mui.alert("验证码已发送！");
+							},
+							error: function(xhr, type, errorThrown) {
+								mui.alert(type);
+							}
+						});
+
+						settime(document.getElementById('btn'));
+					} else {
+						mui.alert("手机格式不正确！");
+						return false;
+					}
+
+				};
+
+			});
+			document.getElementById('bindBtn').addEventListener('tap', function(e) {
+				//				var obj = new Function("return" + jsonBody)();//转换后的JSON对象  
+				//				var code = obj.paramstring.code;
+				if(document.getElementById("verifyCode").value.length == 0) {
+					mui.alert("请输入验证码！");
+					//plus.nativeUI.toast("请输入验证码！");
+					return false;
+				}
+				if(code == document.getElementById("verifyCode").value) {
+//					mui.ajax(url, {
+//						data: {
+//
+//						},
+//						dataType: 'json', //服务器返回json格式数据
+//						type: 'post', //HTTP请求类型
+//						timeout: 10000, //超时时间设置为10秒；
+//						success: function(data) {
+//							//服务器返回响应，根据响应结果，分析是否登录成功；
+//						},
+//						error: function(xhr, type, errorThrown) {
+//							//异常处理；
+//							console.log(type);
+//						}
+//					});
+mui.openWindow({
+						//url : 'http://cc.odamiao.com/weixin/index.jsp?openid='+openid+"&merchantId="+commercialNum+"&activeTab=queryTransaction.html&initIndex=1",
+						url:'index.html',
+						styles : {
+							top : 0, // 新页面顶部位置
+							bottom : 0
+						},
+						show : {
+							autoShow : true, // 页面loaded事件发生后自动显示，默认为true
+							aniShow : "slide-in-right", // 页面显示动画，默认为”slide-in-right“；
+							duration : 2000
+						// 页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒；
+						},
+						waiting : {
+							autoShow : true, // 自动显示等待框，默认为true
+							title : '正在加载...' // 等待对话框上显示的提示内容
+						},
+						extras : {
+							openid : openid,
+							//merchantId : commercialNum,
+							activeTab : "queryTransaction.html",
+							initIndex : "1"
+						}
+					})
+					var openid = document.getElementById('openid').innerHTML;
+
+
+				} else {
+					mui.alert("验证码有误！")
+					return false;
+				}
+			});
+
+			var countdown = 60;
+
+			function settime(obj) {
+				if(countdown == 0) {
+					obj.removeAttribute("disabled");
+					obj.value = "获取验证码";
+					countdown = 60;
+					return;
+				} else {
+					obj.setAttribute("disabled", true);
+					obj.value = "重新发送(" + countdown + ")";
+					countdown--;
+				}
+				setTimeout(function() {
+					settime(obj)
+				}, 1000)
+			}
+			//			点击提交Button  出现loading
+			mui(document.body).on('tap', '.mui-btn', function(e) {
+				mui(this).button('loading');
+				setTimeout(function() {
+					mui(this).button('reset');
+				}.bind(this), 2000);
+			});
+		</script>
+	</body>
+
+</html>

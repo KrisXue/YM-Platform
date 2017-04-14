@@ -1,0 +1,405 @@
+
+html,body{
+width: 100%;
+height: 100%;
+}
+
+.mui-content{
+background: url();
+background-repeat:no-repeat;
+background-size:cover;  
+width: 100%;
+height: 100%;
+}
+.mui-content-padded {
+    margin: 0px;
+}
+/*commercialBound.html*/
+#mui-content-padded-form {
+    margin: 10px 40px;
+}
+.mui-input-group{
+	border-radius: 5px;
+	border:0px solid #c8c7cc;
+	margin-top: 10px;
+}
+.mui-input-group::before {
+    background-color: #c8c7cc;
+    content: "";
+    height: 0px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: scaleY(0.5);
+}
+.mui-input-group::after {
+    background-color: #c8c7cc;
+    bottom: 0;
+    content: "";
+    height: 0px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    transform: scaleY(0.5);
+}
+.mui-input-group .mui-input-row::after {
+    background-color: #c8c7cc;
+    bottom: 0;
+    content: "";
+    height: 0px;
+    left: 15px;
+    position: absolute;
+    right: 0;
+    transform: scaleY(0.5);
+}
+.mui-input-row label {
+    float: left;
+    font-family: "Helvetica Neue",Helvetica,sans-serif;
+    line-height: 1.1;
+    padding: 8px 15px 8px 15px;
+    width: 18%;
+    /*background-color: #ccc;*/
+}
+.mui-input-row label ~ input, .mui-input-row label ~ select, .mui-input-row label ~ textarea {
+    border:1px solid #c8c7cc;
+    float: right;
+    margin-bottom: 0;
+    padding-left: 15px;
+    width: 82%;
+}
+#mui-content-padded-comfirmBtn{
+	margin: 10px 40px;
+	margin-top: 50px;
+}
+.mui-input-row input:focus {
+	outline: none;
+	color:#A9A9A9;;
+    /*border: 1px solid #C4E39D;*/
+    box-shadow: 0 0 10px #4E39D;
+}
+input:focus::-webkit-input-placeholder {
+	color:#7491D5;
+}
+input:focus::-moz-placeholder {
+	color:#7491D5;
+}
+input.invalid:-ms-input-placeholder{
+    color: #DC7B64;
+}
+
+input.invalid::-webkit-input-placeholder {
+    color: #DC7B64;
+}
+.logoDiv{
+	text-align:center;
+	padding-bottom: 70px;
+	padding-top: 70px;
+}
+#bindBtn{
+	border-radius: 30px;
+	padding: 8px 0;
+	border: 0px solid #007aff;
+    background: -webkit-linear-gradient(left, #E7571E, #F09C19);
+    background: -moz-linear-gradient(left, #E7571E, #F09C19);
+    background: -o-linear-gradient(left, #E7571E, #F09C19);
+    background: -webkit-gradient(linear, 0 0, 100% 0, from(#E7571E), to(#F09C19));
+    background: linear-gradient(left, #E7571E, #F09C19); }
+input, select, textarea {
+    font-family: "Helvetica Neue",Helvetica,sans-serif;
+    font-size: 14px;
+    color: #A9A9A9;
+}
+.mui-toast-container {
+    top: 40% !important;/*离布局底部的距离*/
+    }
+.mui-toast-message {
+    opacity: 0.9;/*toast中背景色的透明度*/
+    color: #FFFFFF; /*toast中字体颜色*/
+    width: 280px; /*toast宽度*/
+    /*padding: 50px 5px 10px 5px;/*toast中文字的位置*/*/
+}
+
+/*queryTransaction.html*/
+#selectDateDiv {
+    /*padding-top: 20px;*/
+}
+#tradeDate{ 
+background:url("../images/jiaoyichaxun-icon-rili.png") no-repeat scroll right 10px center transparent;
+background-size:30px 30px;
+padding-right:10px;
+margin-bottom: 0px;
+} 
+.title{
+	color: #a9a9a9;
+	padding-bottom: 10px;
+	padding-top: 10px
+}
+/*commercialInfo.html*/
+.mui-bar-tab .mui-tab-item {
+    color: #929292;
+    text-align: center;
+    white-space: nowrap;
+}
+.mui-bar-tab .mui-tab-item.mui-active {
+	background-color: #ccc;
+    color: #929292;
+}
+
+#ci p {
+    color: #8f8f94;
+    font-size: 14px;
+    height: 32px;
+    line-height: 32px;
+   	margin-top: 5px;
+}
+
+#ci .mui-table-view .mui-media-object {
+    height: 20px;
+    line-height: 32px;
+    max-width: 32px;
+}
+#ci .mui-table-view-cell {
+    overflow: hidden;
+    padding: 12px 15px;
+    position: relative;
+}
+#ci .mui-media img {
+    border: 0 none;
+    height: 20px;
+    margin-top: 11px;
+    width: 20px;
+}
+#ci .mui-media-body .mui-pull-right{
+	color: #000000;
+}
+input[type="submit"], .mui-btn-primary, .mui-btn-blue {
+    border: 0px solid #007aff;
+    background: -webkit-linear-gradient(left, #53C995, #94D179);
+    background: -moz-linear-gradient(left, #53C995, #94D179);
+    background: -o-linear-gradient(left, #53C995, #94D179);
+    background: -webkit-gradient(linear, 0 0, 100% 0, from(#53C995), to(#94D179));
+    background: linear-gradient(left, #53C995, #94D179); 
+    color: #fff;
+}
+#header{
+	padding-top: 10px;
+	backface-visibility: hidden;
+    background-color: #f7f7f7;
+    border-bottom: 0 none;
+    /*box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);*/
+    height: 60px;
+    left: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: fixed;
+    right: 0;
+    z-index: 10;
+}
+.mui-bar {
+    backface-visibility: hidden;
+    background-color: #f7f7f7;
+    border-bottom: 0 none;
+    height: 44px;
+    left: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: fixed;
+    right: 0;
+    z-index: 10;
+}
+.mui-bar-nav {
+    top: 0;
+    box-shadow : 0 0px 0px #ccc;
+}
+.mui-bar {
+    backface-visibility: hidden;
+    background-color: #f7f7f7;
+    border-bottom: 0 none;
+    height: 44px;
+    left: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: fixed;
+    right: 0;
+    z-index: 10;
+}
+#tab{
+	    backface-visibility: hidden;
+    background-color: #f7f7f7;
+    border-bottom: 0 none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+    height: 44px;
+    left: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: fixed;
+    right: 0;
+    z-index: 10;
+}
+.pullrefresh{
+	padding-top: 60px;
+}
+
+/**verifySkip.html**/
+body{ text-align:center} 
+.spinner{ margin:0 auto; width:400px; height:100px;} 
+.spinner {
+  
+  width: 50px;
+  height: 60px;
+  text-align: center;
+  font-size: 10px;
+}
+ 
+.spinner > div {
+  background-color: #67CF22;
+  height: 100%;
+  width: 6px;
+  display: inline-block;
+   
+  -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+  animation: stretchdelay 1.2s infinite ease-in-out;
+}
+ 
+.spinner .rect2 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+ 
+.spinner .rect3 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+ 
+.spinner .rect4 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+ 
+.spinner .rect5 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+ 
+@-webkit-keyframes stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) } 
+  20% { -webkit-transform: scaleY(1.0) }
+}
+ 
+@keyframes stretchdelay {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }  20% {
+    transform: scaleY(1.0);
+    -webkit-transform: scaleY(1.0);
+  }
+}
+
+.mui-bar-nav{
+	background-color: #000000;
+}
+.mui-title{
+	color: white;
+	text-align: left;
+}
+.mui-icon-info-filled{
+	color: #2493B8;
+}
+/*#info{
+	margin: 20px;
+}*/
+.mui-bar-nav{
+	background-color: #efefef;
+	box-shadow: 0px 0px 0px;
+}
+.mui-bar {
+	box-shadow: 0px 0px 0px;
+}
+.mui-input-group{
+	width: 100%;
+}
+.mui-btn-blue, .mui-btn-primary, input[type="submit"] {
+    background-color: #2493B8;
+    border: 1px solid #2493B8;
+    color: #fff;
+}
+
+.mui-input-group input, .mui-input-group textarea {
+    background-color: transparent;
+    border: 1 solid #cc;
+    border-radius: 0;
+    box-shadow: none;
+    margin-bottom: 0;
+}
+
+#btnDiv #btn{
+	text-align: center;
+	 background: rgba(0, 0, 0, 0) linear-gradient(to right, #E7571E 0%, #F09C19 100%) repeat scroll 0 0;
+	 border: 0 solid #F09C19;
+}
+.mui-input-group{
+	border-radius: 15px;
+	border:1px solid #c8c7cc;
+	box-shadow: 5px 5px 5px #c8c7cc;
+}
+.mui-input-group::before {
+    background-color: #c8c7cc;
+    content: "";
+    height: 0px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: scaleY(0.5);
+}
+.mui-input-group::after {
+    background-color: #c8c7cc;
+    bottom: 0;
+    content: "";
+    height: 0px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    transform: scaleY(0.5);
+}
+.mui-content-padded {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.mui-input-row label {
+    float: left;
+    font-family: "Helvetica Neue",Helvetica,sans-serif;
+    line-height: 1.1;
+    padding: 8px 15px 6px 15px;
+    width: 25%;
+}
+.mui-input-row label ~ input, .mui-input-row label ~ select, .mui-input-row label ~ textarea {
+    border: 0 none;
+    float: right;
+    margin-bottom: 0;
+    padding-left: 0;
+    width: 75%;
+}
+#btn{
+	position:relative;
+	float: right;
+	right: 60px;
+	bottom:49px;
+	background-color: #2493B8;
+	border: 1px solid #2493B8;
+}
+.mui-input-group .mui-input-row::after {
+    background-color: #c8c7cc;
+    bottom: 0;
+    content: "";
+    height: 1px;
+    left: 15px;
+    position: absolute;
+    right: 0;
+    transform: scaleY(0.5);
+}
+.mui-dtpicker-header button:first-child {
+    float: left;
+}
